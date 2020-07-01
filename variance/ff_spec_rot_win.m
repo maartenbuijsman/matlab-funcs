@@ -1,5 +1,10 @@
 function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
-% ff_spec_rot_win, modified by mcb, nrl, 2014-6-3 
+% ff_spec_rot_win, modified by mcb, USM, 2020-7-1
+%   t1 is time steps
+%   numwin is number of windows (segments) that time series will be split in 
+%       spectra will be averaged over numwin
+%   period and freq are perod and frequency
+%   u1 and v1 are x and y velocity components
 % units of puv,quv,cw,ccw: u_unit^2 
 %    in order to get  u_unit^2/Hz = u_unit^2 * dt
 % ff_spec_rot.m -> compute the rotary spectra from u,v velocity components
