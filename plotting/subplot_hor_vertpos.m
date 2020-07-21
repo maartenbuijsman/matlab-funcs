@@ -17,7 +17,9 @@
 %% use in combination with 
 %% f1 = figure
 %% set(f1,'PaperUnits','centimeters','PaperPosition',[0.5 0.5 20 15]);
-
+%% 
+%% when calling the first subplot,  use subplot(pos(1,:))
+%%              the second subplot, use subplot(pos(2,:))
 
 function [pos] = subplot_hor_vertpos(numph,numpv,hors,hore,vers,vere,Dsh,Dsv);
 
