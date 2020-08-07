@@ -1,4 +1,3 @@
-function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
 %% [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
 %
 %   ff_spec_rot_win, modified by mcb, USM, 2020-8-7
@@ -41,6 +40,8 @@ function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
 %      decomposed into two circulaly polarized constituents, one
 %      rotating clockwise and other anti-clockwise
 %
+
+function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
 
 % %% test
 % clear all
