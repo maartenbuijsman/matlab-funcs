@@ -1,12 +1,16 @@
-function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
-% ff_spec_rot_win, modified by mcb, USM, 2020-7-1
+%function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
+%% [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
+%
+%   ff_spec_rot_win, modified by mcb, USM, 2020-8-7
 %   t1 is time steps
 %   numwin is number of windows (segments) that time series will be split in 
-%       spectra will be averaged over numwin
+%      spectra will be averaged over numwin
 %   period and freq are perod and frequency
 %   u1 and v1 are x and y velocity components
-% units of puv,quv,cw,ccw: u_unit^2 
-%    in order to get  u_unit^2/Hz = u_unit^2 * dt
+%   units of puv,quv,cw,ccw: u_unit^2 
+%   in order to get  u_unit^2/Hz = u_unit^2 * dt
+%
+% Original: 
 % ff_spec_rot.m -> compute the rotary spectra from u,v velocity components
 %
 % use:  [puv,quv,cw,ccw] = ff_spec_rot(u,v);
@@ -38,18 +42,31 @@ function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
 %      rotating clockwise and other anti-clockwise
 %
 
-% %test
+% %% test
 % clear all
+% numwin = 1;
+% % numwin = 2;
 % numwin = 3;
-% t1=1:0.1:1000;
-% u1 = sin(2*pi/12*t1);
-% v1 = 2*cos(2*pi/12*t1-5);
+% T1 = 12; T2=24; T3=35;
+% t1 = 1:720;
+% u1 = 1*cos(2*pi/T1*t1) + 0.5*cos(2*pi/T2*t1) + 0.25*cos(2*pi/T3*t1);
+% v1 = 1*cos(2*pi/T1*t1-pi/2) + 0.5*cos(2*pi/T2*t1-pi/4) + 0.25*cos(2*pi/T3*t1-pi/2);
+% figure; plot(t1,u1,'r-',t1,v1,'b-')
+
+% make sure the time series lengths are even
+n1 = length(t1);
+if rem(n1,2) ~= 0
+    t1 = t1(1:end-1);
+    u1 = u1(1:end-1);
+    v1 = u1(1:end-1);    
+end
 
 % number of indices per numwin+1 segments
+% note: the windows overlap
 nt = length(t1);
 inw = floor(nt/(numwin+1)); 
 
-% get indices
+% get indices 
 is=1;
 for i=1:numwin
     p(i).ii = is:2*inw+is-1;
@@ -69,16 +86,25 @@ for i=1:numwin
     % individual components fourier series
     fu = fft(u); fv = fft(v);
     
-    % The first component is simply the sum of the data, and can be removed.
+    % The first component at 0 frequency 
+    % is simply the sum of the data, and can be removed.
     fu(1)=[];
     fv(1)=[];
     
     % time releated ......
-    n=length(fu); 
-    dt = mean(diff(t));
-    nyquist = 1/(2*dt);  %% highest frequency that can be resolved: 1/(2(dt)); 
-    p(i).freq = (1:n/2)/(n/2)*nyquist;
+    n = length(t);
+    dt    = t(2) - t(1);
+    df    = 1/(dt*n);
+    freq  = 1/dt*(0:(n/2))/n; %first value is 0 frequency
+    p(i).freq = freq(2:end);
     p(i).period=1./p(i).freq;
+    
+%     % slightly incorrect
+%     n=length(fu);     
+%     dt = mean(diff(t));
+%     nyquist = 1/(2*dt);  %% highest frequency that can be resolved: 1/(2(dt)); 
+%     p(i).freq = (1:n/2)/(n/2)*nyquist;
+%     p(i).period=1./p(i).freq;
     
     % autospectra of the scalar components
     pu = fu.*conj(fu); pv = fv.*conj(fv);
@@ -92,6 +118,11 @@ for i=1:numwin
     % rotatory components
     p(i).cw   = (pu+pv-2*p(i).quv)./8;
     p(i).ccw  = (pu+pv+2*p(i).quv)./8;
+    
+%     figure
+%     plot(p(i).cw,'c')
+%     hold
+%     plot(p(i).ccw,'g')
 
 end
 
@@ -108,11 +139,12 @@ quv = quv/numwin;
 cw  = cw/numwin;
 ccw = ccw/numwin;    
 
-period=p(1).period;
-freq=p(1).freq;
+% remap for output
+period = p(1).period;
+freq   = p(1).freq;
 
 % figure
-% plot(period,log10(cw))
+% plot(period,log10(cw),'r.-')
 % hold
-% plot(period,log10(ccw),'k.-')
+% plot(period,log10(ccw),'b.-')
 
