@@ -1,4 +1,4 @@
-%function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
+function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
 %% [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
 %
 %   ff_spec_rot_win, modified by mcb, USM, 2020-8-7
