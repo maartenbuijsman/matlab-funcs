@@ -1,5 +1,5 @@
 %% function [period,freq,power] = fft_spectra2(t,y)
-%  Maarten Buijsman, USM, 2019-8-27
+%  Maarten Buijsman, USM, 2020-8-25
 %  performs simple spectral analysis
 %  input time vector t and data y
 %  output period, freq, and power [y_unit^2*1/Hz]
@@ -11,11 +11,11 @@
 function [period,freq,power] = fft_spectra2(t,y);
 
 % %% test
-clear all
-T1 = 12; T2=24; T3=35;
-t = 1:720;
-y = 1*cos(2*pi/T1*t) + 0.5*cos(2*pi/T2*t) + 0.25*cos(2*pi/T3*t);
-figure; plot(t,y)
+%clear all
+%T1 = 12; T2=24; T3=35;
+%t = 1:720;
+%y = 1*cos(2*pi/T1*t) + 0.5*cos(2*pi/T2*t) + 0.25*cos(2*pi/T3*t);
+%figure; plot(t,y)
 
 % make sure the time series is even
 n1 = length(t);
@@ -58,8 +58,8 @@ freq  = freq(2:end);
 period  = 1./freq;                        
 
 % test
-figure
-semilogy(period,power)
+%figure
+%semilogy(period,power)
 
 
 
