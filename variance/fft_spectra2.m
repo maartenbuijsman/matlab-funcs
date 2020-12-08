@@ -51,7 +51,7 @@ freq  = 1/dt*(0:(n1/2))/n1;
 % imaginary numbers for these sides are the complex conjugates
 Y  = fft(y)*dt;               % y_unit*s
 P2 = abs(Y).^2;               % energy y_unit^2*s^2 = y_unit^2*1/Hz^2  
-P1 = P2(1:n1/2+1);            % select right side and keep first value, which relates to the mean 
+P1 = P2(1:n1/2+1);            % select left side (1:n+1), keep first value, which relates to the mean 
 P1(2:end-1) = 2*P1(2:end-1);  % double the power (= folding the spectrum)
 power = P1*df;                % y_unit^2*s^2 * 1/s = y_unit^2*s = y_unit^2*1/Hz      (Hz = 1/s)
 
