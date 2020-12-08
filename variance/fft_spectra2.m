@@ -44,15 +44,15 @@ dt    = t(2) - t(1);
 df    = 1/(dt*n1);
 freq  = 1/dt*(0:(n1/2))/n1;
 
-% first index value is the mean
+% Y(1) relates to the mean
 % Y(2) = conjugate(Y(end))
 % index n1/2+1 is shared between left and right side of spectrum
 % real numbers for these sides are the same 
 % imaginary numbers for these sides are the complex conjugates
 Y  = fft(y)*dt;               % y_unit*s
 P2 = abs(Y).^2;               % energy y_unit^2*s^2 = y_unit^2*1/Hz^2  
-P1 = P2(1:n1/2+1);            % keep first value  
-P1(2:end-1) = 2*P1(2:end-1);  % add the left side, except the shared value => do not double that!
+P1 = P2(1:n1/2+1);            % select right side and keep first value, which relates to the mean 
+P1(2:end-1) = 2*P1(2:end-1);  % double the power (= folding the spectrum)
 power = P1*df;                % y_unit^2*s^2 * 1/s = y_unit^2*s = y_unit^2*1/Hz      (Hz = 1/s)
 
 % check; these values should be the same!!
