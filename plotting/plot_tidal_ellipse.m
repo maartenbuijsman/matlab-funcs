@@ -29,8 +29,11 @@ fq = 12.1408331767;
 ud =a*cos(fq*time_d-45*pi/180);
 vd =a/3*cos(fq*time_d-30*pi/180);
 
+help frequencies_L2
+
 plot_fg=0;
 freq_sel=[46];
+freq_dat = 'L2'
 [Ao_ud,au,bu,fq2,coef_det,sigma,data,fit] = harmonic03(time_d,ud,freq_sel,1,plot_fg,freq_dat); 
 [Ao_vd,av,bv,fq2,coef_det,sigma,data,fit] = harmonic03(time_d,vd,freq_sel,1,plot_fg,freq_dat); 
 %atan(bv/av)*180/pi

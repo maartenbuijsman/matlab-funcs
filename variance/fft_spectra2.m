@@ -22,7 +22,10 @@ n1 = length(t);
 if rem(n1,2) ~= 0
     t = t(1:end-1);
     y = y(1:end-1);
+    n1 = length(t);
 end
+
+%whos t y
 
 % remove linear fit (this is a slow routine ...)
 cf    = polyfit(t,y,1);
