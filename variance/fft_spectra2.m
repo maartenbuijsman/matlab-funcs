@@ -44,7 +44,11 @@ dt    = t(2) - t(1);
 df    = 1/(dt*n1);
 freq  = 1/dt*(0:(n1/2))/n1;
 
-% this version has the mean value in the first index
+% first index value is the mean
+% Y(2) = conjugate(Y(end))
+% index n1/2+1 is shared between left and right side of spectrum
+% real numbers for these sides are the same 
+% imaginary numbers for these sides are the complex conjugates
 Y  = fft(y)*dt;               % y_unit*s
 P2 = abs(Y).^2;               % energy y_unit^2*s^2 = y_unit^2*1/Hz^2  
 P1 = P2(1:n1/2+1);            % keep first value  
