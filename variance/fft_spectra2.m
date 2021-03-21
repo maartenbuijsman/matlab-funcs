@@ -10,12 +10,12 @@
 
 function [period,freq,power] = fft_spectra2(t,y);
 
-% %% test
-%clear all
-%T1 = 12; T2=24; T3=35;
-%t = 1:720;
-%y = 1*cos(2*pi/T1*t) + 0.5*cos(2*pi/T2*t) + 0.25*cos(2*pi/T3*t);
-%figure; plot(t,y)
+% % %% test
+% clear all
+% T1 = 12; T2=24; T3=35;
+% t = 1:720;
+% y = 1*cos(2*pi/T1*t) + 0.5*cos(2*pi/T2*t) + 0.25*cos(2*pi/T3*t);
+% figure; plot(t,y)
 
 % make sure the time series is even
 n1 = length(t);
@@ -27,10 +27,10 @@ end
 
 %whos t y
 
-% remove linear fit (this is a slow routine ...)
-cf    = polyfit(t,y,1);
-y_fit = polyval(cf,t);
-y = y - y_fit;  
+% % remove linear fit (this is a slow routine ...)
+% cf    = polyfit(t,y,1);
+% y_fit = polyval(cf,t);
+% y = y - y_fit;  
 
 % fast!
 %y = y-mean(y);

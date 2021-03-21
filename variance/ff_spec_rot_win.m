@@ -1,9 +1,10 @@
-%% [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
+%% [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwinm,tukey);
 %
-%   ff_spec_rot_win, modified by mcb, USM, 2020-8-7
+%   ff_spec_rot_win, modified by mcb, USM, 2021-3-21
 %   t1 is time steps
 %   numwin is number of windows (segments) that time series will be split in 
 %      spectra will be averaged over numwin
+%   if tukey = 1, a tukeywindow is applied 
 %   period and freq are perod and frequency
 %   u1 and v1 are x and y velocity components
 %   units of puv,quv,cw,ccw: u_unit^2 
@@ -41,7 +42,7 @@
 %      rotating clockwise and other anti-clockwise
 %
 
-function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin);
+function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin,tukey);
 
 % %% test
 % clear all
@@ -59,7 +60,7 @@ n1 = length(t1);
 if rem(n1,2) ~= 0
     t1 = t1(1:end-1);
     u1 = u1(1:end-1);
-    v1 = u1(1:end-1);    
+    v1 = v1(1:end-1);    
 end
 
 % number of indices per numwin+1 segments
@@ -84,6 +85,13 @@ for i=1:numwin
     u = u - mean(u);
     v = v - mean(v);    
 
+    % apply tukey window
+    if tukey
+        H = tukeywin(length(t));
+        u = u.*H';
+        v = v.*H';    
+    end
+    
     % individual components fourier series
     fu = fft(u); fv = fft(v);
     
