@@ -50,6 +50,10 @@ freq  = 1/dt*(0:(n1/2))/n1;
 % real numbers for these sides are the same 
 % imaginary numbers for these sides are the complex conjugates
 Y  = fft(y)*dt;               % y_unit*s
+
+% Parseval's theorem; ratio between integrated energy and integrated spectral denisty  (should be 1)
+% sum(y.^2*dt)/sum(abs(Y).^2*df)
+
 P2 = abs(Y).^2;               % energy y_unit^2*s^2 = y_unit^2*1/Hz^2  
 P1 = P2(1:n1/2+1);            % select left side (1:n+1), keep first value, which relates to the mean 
 P1(2:end-1) = 2*P1(2:end-1);  % double the power (= folding the spectrum)
