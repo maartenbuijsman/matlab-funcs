@@ -1,25 +1,22 @@
 %%---------------------------------------------------------------------------------------------------
-%% function [No_Harm] = harm_criteria2(xt,xv,freq_sel,disp_error,ratio,freq_dat)
-%% Author: Maarten Buijsman
-%% Place: NIOZ
-%% Date 1st version: 25-2-2004
-%% Date modified:    7-8-2003
-%% Description: 
-%% Determines minimum duration based on the Rayleigh's criterion,
-%% determines highest frequency based on the Nyquist criterium, and 
-%% determines lowest frequency
-%% input: vector time series xt [1]x[time] in decimal yearday, velocity series xv [1]x[time], 
-%% vector freq_sel with number of tidal constituents defined below, and disp_error (=1 YES display, =0 NO )
-%% input: No_Harm (=1 vector=bad, =0 vector=OK)
-%% 
-%% 7-8-2003 lowest frequency criteria overruled for only one frequency due to just too short time duration
-%% included ratio = ratio of data without NaNs to total data with NaNs
-%% 17-06-05: harm_criteria2
-%% 06-07-05: selects freq_dat L0 or L1 
-%% use: 
-%% frequencies_l2, (list of all frequencies)
-%% fq_str = string_freq(i,freq_dat), (produces strings with constituent name)
-%%---------------------------------------------------------------------------------------------------
+% function [No_Harm] = harm_criteria2(xt,xv,freq_sel,disp_error,ratio,freq_dat)
+% Author: Maarten Buijsman
+% Place: NIOZ, USM
+% Date 1st version: 25-02-2004
+% Date modified:    05-04-2021
+% Description: 
+% Determines minimum duration based on the Rayleigh's criterion,
+% determines highest frequency based on the Nyquist criterium, and 
+% determines lowest frequency
+% input: vector time series xt [1]x[time] in decimal yearday, 
+%        velocity series xv [1]x[time], vector freq_sel with number of
+%        tidal constituents defined below, and disp_error (=1 YES display, =0 NO )
+%        ratio ratio of data without NaNs to total data including NaNs
+% output: No_Harm (=1 vector=bad, =0 vector=OK)
+%
+% use frequencies from frequencies_L2, (list of all frequencies)
+% fq_str = string_freq(i,freq_dat), (produces strings with constituent name)
+
 function [No_Harm] = harm_criteria2(xt,xv,freq_sel,disp_error,ratio,freq_dat)
 
 %%-- frequencies [rad/day]
