@@ -1,35 +1,30 @@
-%%---------------------------------------------------------------------------------------------------
-%%-- function: [Ao,a,b,fq2,coef_det,sigma,data,fit] = harmonic03(xt,xv,freq_sel,cel_num,plot_fig,freq_dat)
-%%-- Author: Maarten Buijsman
-%%-- Place: NIOZ
-%%-- Date modified:    24-12-2003
-%%-- Date 1st version: 21-3-2003
-%%-- Description: 
-%%-- Harmonic analysis for velocity vectors
-%%-- applies least squares technique
-%%-- input: vector time series xt [1]x[time] in decimal yearday, velocity series xv [n]x[time], 
-%%-- and vector freq_sel with number of tidal constituents defined below:
-%%-- output: the residual Ao, coefficients a and b from Ao + sum(n){a(n)*cos[omega(n)*t]+b(n)*sin[omega(n)*t]} 
-%%-- and the coefficient of determination (r^2) and the standard deviation
-%%-- frequencies in [rad/day]:
-%%-- Sa(1);    Ssa(2);  Mm(3);    Mf(4);   2Q1(5);   sig1(6);  q1(7);    ro1(8);   O1(9);   tau1(10); M1(11);   NO1(12);
-%%-- x1(13);   pi1(14); P1(15);   S1(16);  K1(17);   psi1(18); phi1(19); the1(20); J1(21)   OO1(22);  eps2(23); 2N2(24); 
-%%-- mu2(25);  N2(26);  nu2(27);  M2(28);  lab2(29); L2(30);   T2(31);   S2(32);   R2(33);  K2(34);   ksi2(35); eta2(36); 
-%%-- M3(37);   SO1(38); OQ2(39);  OP2(40); MKS2(41); 2SM2(42); MO3(43);  SO3(44);  MK3(45); SK3(46);  MN4(47);  M4(48);
-%%-- SN4(49)); MS4(50); MK4(51);  S4(52);  SK4(53);  2MN6(54); M6(55);   MSN6(56); 2MS6(57);SMK6(58); 2SM6(59); MSK6(60));
-%%-- 3MN8(61); M8(62);  2MSN8(63);3MS8(64);2MS8(65); 2MSK8(66); M2S2 beat(68) 
-%%-- 
-%%-- test from Emery and Thomson, p401, fitting to k1 and m2 freq_sel = [17 28]
-%%-- xt=[1:1:32]./24 %%-- time in days
-%%-- xv=[1.97 1.46 0.98 0.73 0.67 0.82 1.15 1.58 2.0 2.33 2.48 2.43 2.25 2.02 1.82 1.72 1.75 1.91 2.22 2.54 2.87 3.1 3.15 2.94 2.57 2.06 1.56 1.13 0.84 0.73 0.79 1.07]
-%%-- 30-09-03 added position cel_num for plotting
-%%-- 24-12-03 returns the data and the fit matrix
-%%-- 09-05-05 choice for plotting
-%%--
-%%---------------------------------------------------------------------------------------------------
+%% function [Ao,a,b,fq2,coef_det,sigma,fit]=harmonic03(xt,xv,freq_sel,cel_num,plot_fig,freq_dat)
+%  Author: Maarten Buijsman
+%  Place: NIOZ, USM
+%  Date modified:    04-05-2021
+%  Date 1st version: 21-03-2003
+%
+%  Least squares harmonic analysis for timeseries [depth vs time]
+%  input: xt vector times [1]*[nt] in decimal yearday, 
+%         xv matrix velocity time series [n]*[nt], 
+%         freq_sel vector with number of tidal constituents defined as in frequencies_L2.m 
+%         cel_num index of depth level of xv; if only vector is used cel_num=1
+%         plot_fig = 1 if figure of time series and fit needs to be displayed
+%         freq_dat = 'L2' if frequencies_L2 is used to obtain frequencies
+%
+%  output: the time-mean Ao, constituent coefficients a and b 
+%          as in Ao + sum(n){a(n)*cos[omega(n)*t]+b(n)*sin[omega(n)*t]} 
+%          coef_det, the coefficient of determination (r^2) 
+%          sigma, the standard deviation of the residual
+%          fit, fitted time series with the same size as xv 
+%  
+%  test from Emery and Thomson, p401, fitting to k1 and m2 freq_sel = [21 46]
+%  xt=[1:1:32]./24 %  time in days
+%  xv=[1.97 1.46 0.98 0.73 0.67 0.82 1.15 1.58 2.0 2.33 2.48 2.43 2.25 2.02 1.82 1.72 1.75 1.91 2.22 2.54 2.87 3.1 3.15 2.94 2.57 2.06 1.56 1.13 0.84 0.73 0.79 1.07]
+
 function [Ao,a,b,fq2,coef_det,sigma,fit]=harmonic03(xt,xv,freq_sel,cel_num,plot_fig,freq_dat)
 
-%%-- frequencies [rad/day]
+%% frequencies [rad/day]
 if strcmp(freq_dat,'L0')
     [fq] = frequencies;
 elseif strcmp(freq_dat,'L1')
@@ -44,8 +39,8 @@ end
 fq2   = fq(freq_sel);	%[rad/day]
 
 %% number of variables in signal
-%% z(t) = mean + acos(fq*t) + bsin(fq*t)
-%% Per component 2 variables a and b, plus 1 variable for the mean current
+%  z(t) = mean + acos(fq*t) + bsin(fq*t)
+%  Per component 2 variables a and b, plus 1 variable for the mean current
 ntide = 2*length(freq_sel)+1;		
 
 %% make sure it is a row matrix
@@ -58,8 +53,8 @@ nbins = size(xv,1);
 
 if plot_fig == 1; figure; end
 
-%%-- method used is the least squares analysis presented in numerical recepies chapter 14.3
-%% declare matrices to make it FASTER!
+%% method used is the least squares analysis presented in numerical recepies chapter 14.3
+%  declare matrices to make it FASTER!
 x2  = zeros(ntide,nbins); %%-- definine matrix [number of variables * depth bins]
 Ao  = zeros(nbins,1)*NaN;                coef_det=Ao; sigma=Ao;
 a   = zeros(length(freq_sel),nbins)*NaN; b=a;
@@ -94,7 +89,7 @@ for x4 = 1:nbins;	     %%-- Loop over all bins (Harmonic analysis for all depths
         b(:,x4) = x2(3:2:end,x4);	%% b-value in bsin(fq*t)
            
         %% calculate coefficient of determination and standard deviation
-        %% see Emery and Thomson, p.235
+        %  see Emery and Thomson, p.235
         xv_harm      = har2*x2(:,x4);
         SSR          = (xv_harm-mean(xv2))'*(xv_harm-mean(xv2));        
         SST          = (xv2-mean(xv2))'*(xv2-mean(xv2));       
