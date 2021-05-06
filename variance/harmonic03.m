@@ -14,7 +14,7 @@
 %
 %  output: the time-mean Ao, constituent coefficients a and b 
 %          as in Ao + sum(n){a(n)*cos[omega(n)*t]+b(n)*sin[omega(n)*t]} 
-%          coef_det, the coefficient of determination (r^2) 
+%          coef_det, the coefficient of determination R^2 = 1-diff^2/tot^2
 %          sigma, the standard deviation of the residual
 %          fit, fitted time series with the same size as xv 
 %  
@@ -91,16 +91,17 @@ for x4 = 1:nbins;	     %%-- Loop over all bins (Harmonic analysis for all depths
         %% calculate coefficient of determination and standard deviation
         %  see Emery and Thomson, p.235
         xv_harm      = har2*x2(:,x4);
-        SSR          = (xv_harm-mean(xv2))'*(xv_harm-mean(xv2));        
+        SSR          = (xv_harm-mean(xv_harm))'*(xv_harm-mean(xv_harm));        
         SST          = (xv2-mean(xv2))'*(xv2-mean(xv2));       
-        coef_det(x4) = SSR/SST;
-        SSE          = (xv2-xv_harm)'*(xv2-xv_harm);
+        SSE          = (xv2-mean(xv2)-(xv_harm-mean(xv_harm)))'*(xv2-mean(xv2)-(xv_harm-mean(xv_harm)));
+        %coef_det(x4) = SSR/SST;
+        coef_det(x4) = 1-SSE/SST;   %this one is better according to Wikipedia!
         sigma(x4)    = sqrt(SSE/(x6-ntide));
         
         %% plot for value x4 (in case bottom-up, 1st cell above the bottom is 2nd cell!)
         if plot_fig == 1; 
            if x4 == cel_num; 
-                plot(xt2,xv2,'b+--'); hold; %data
+                plot(xt2,xv2,'b.-.'); hold; %data
                 plot(xt2,xv_harm,'r.-');    %fit
            end
         end
