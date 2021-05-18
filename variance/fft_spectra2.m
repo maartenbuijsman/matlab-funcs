@@ -5,7 +5,8 @@
 %     time vector t1 and data y1
 %     tukey and numwin 
 %  output 
-%     period, freq, and power [y_unit^2/(cycle/y_unit)]
+%     period, freq, and power [y_unit^2/(cycle/t_unit)]
+%     e.g. y_unit = m and t_unit = day --> [m^2/cpd]
 %  if tukey = 1, a tukeywindow is applied 
 %  numwin sets the number of 50% overlapping windows 
 %  if numwin = 1, the entire even length of the time series is used
