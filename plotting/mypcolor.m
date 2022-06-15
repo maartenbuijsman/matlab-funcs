@@ -1,5 +1,5 @@
 %function mypcolor(x,y,f)
-function mypcolor(varargin)
+function h = mypcolor(varargin)
 
 % when contour variable is given
 % but not x and y
@@ -44,7 +44,7 @@ f_pcol(end,:)     = f_pcol(end-1,:);
 f_pcol(:,end)     = f_pcol(:,end-1);
 
 
-pcolor(x_pcol,y_pcol,f_pcol);%shading flat;colorbar
+h = pcolor(x_pcol,y_pcol,f_pcol);%shading flat;colorbar
 
 
 return
