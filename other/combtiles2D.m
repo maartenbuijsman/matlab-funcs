@@ -4,22 +4,29 @@
 %  In the case of 1 tile, buffers are also removed
 % 
 %  Input:
-%  fnm: filename, fnm = ['modAN1_' RUNNM '_M2_JGFI_']
+%  fnm: filename, e.g., fnm = [plat_190_blk_']
 %  ext: extension, ext = '.BinF'
 %  dirin: directory
 %  lenrec: record length, lenrec = (nx+2*halo)*(ny+2*halo)+2;  
 %  IEEE: file format, IEEE = 'ieee-be'
 %  nx,ny,halo,numl: x and y tile dimensions, buffer, number of records
-%  IT,JT: vectors of x and y tile numbers
+%  IT,JT: vectors of x and y tile numbers, as in e.g.,  
+%  the loaded file is, fname = 
+%  [fnm num2str(JT(jj)) '_' num2str(IT(ii)) ext] => plat_190_blk_24_37.BinF
+
+%
 %  Output:
 %  varout: combined variable
 
-% test
-lenrec = lenrec2;
-halo   = 3;
-numl = MEIG;
+function varout = combtiles2D(fnm,ext,dirin,lenrec,IEEE,nx,ny,halo,numl,IT,JT);
 
-IT = 37:38; JT = 22:24;
+% % test
+% lenrec = lenrec2;
+% halo   = 3;
+% numl = MEIG;
+% 
+% IT = 37:38; JT = 22:24;
+% % test
 
 var3 = zeros(length(JT)*ny,length(IT)*nx,numl);
 
@@ -40,7 +47,7 @@ for jj=1:length(JT)
         for i=1:numl
             alldata = fread(fid,lenrec,'single');
             var1 = permute(reshape(alldata(2:end-1),[nx+halo*2 ny+halo*2]),[2 1]);
-            var3(inj,ini,i) = var1(halo+1:ny+halo,halo+1:nx+halo);
+            varout(inj,ini,i) = var1(halo+1:ny+halo,halo+1:nx+halo);
         end
         
         fclose(fid);
