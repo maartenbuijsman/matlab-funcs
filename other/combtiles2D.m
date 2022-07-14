@@ -42,6 +42,8 @@ for jj=1:length(JT)
         
         fname = [fnm num2str(JT(jj)) '_' num2str(IT(ii)) ext];
         fid    = fopen([dirin fname],'r',IEEE);
+        
+        if (fid==-1); disp(['fid = -1; read error in ' dirin fname]); end
                 
         % extract all records
         for i=1:numl

@@ -7,7 +7,11 @@
 %  output 
 %     period, freq, and power [y_unit^2/(cycle/t_unit)]
 %     e.g. y_unit = m and t_unit = day --> [m^2/cpd]
-%  if tukey = 1, a tukeywindow is applied 
+%
+%  if tukey = 1, a hanning window is applied 
+%  if tukey = 0, a boxcar window is applied (all ones; no tukey window)
+%  if tukey < 1, a tukey window is applied with R = tukey
+%
 %  numwin sets the number of 50% overlapping windows 
 %  if numwin = 1, the entire even length of the time series is used
 %  the time series mean is removed
@@ -55,10 +59,8 @@ for i=1:numwin
     y = y-mean(y);
 
     % use a Tukey window
-    if tukey
-        H = tukeywin(length(t));
-        y = y.*H';
-    end
+    H = tukeywin(length(t),tukey);
+    y = y.*H';
 
     % freq: 1st value is 1/(nt*dt), last value is fn = 1/(2*dt)
     dt    = t(2) - t(1);
