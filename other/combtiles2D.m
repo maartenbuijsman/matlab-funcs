@@ -40,7 +40,9 @@ for jj=1:length(JT)
         
         ini = [is:ie];
         
-        fname = [fnm num2str(JT(jj)) '_' num2str(IT(ii)) ext];
+        %fname = [fnm num2str(JT(jj)) '_' num2str(IT(ii)) ext]        
+        fname = [fnm sprintf('%02d',JT(jj)) '_' sprintf('%02d',IT(ii)) ext] % allows first digit to be a 0        
+        
         fid    = fopen([dirin fname],'r',IEEE);
         
         if (fid==-1); disp(['fid = -1; read error in ' dirin fname]); end
@@ -60,6 +62,7 @@ for jj=1:length(JT)
         
     end
     
-    js=js+ny; je=je+ny;
+    js=js+ny; 
+    je=je+ny;
     
 end

@@ -1,10 +1,11 @@
-%% [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwinm,tukey);
+%% [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwinm,tukey,costap);
 %
 %   ff_spec_rot_win, modified by mcb, USM, 2021-3-21
 %   t1 is time steps
 %   numwin is number of windows (segments) that time series will be split in 
 %      spectra will be averaged over numwin
 %   if tukey = 1, a tukeywindow is applied 
+%      costap = fraction of 1 over which will be tapered (pick 0.2) 
 %   period and freq are perod and frequency
 %   u1 and v1 are x and y velocity components
 %   units of puv,quv,cw,ccw: u_unit^2 
@@ -42,7 +43,7 @@
 %      rotating clockwise and other anti-clockwise
 %
 
-function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin,tukey);
+function [puv,quv,cw,ccw,period,freq] = ff_spec_rot_win(t1,u1,v1,numwin,tukey,costap);
 
 % %% test
 % clear all
@@ -87,7 +88,7 @@ for i=1:numwin
 
     % apply tukey window
     if tukey
-        H = tukeywin(length(t));
+        H = tukeywin(length(t),costap);
         u = u.*H';
         v = v.*H';    
     end
@@ -127,6 +128,10 @@ for i=1:numwin
     % rotatory components
     p(i).cw   = (pu+pv-2*p(i).quv)./8;
     p(i).ccw  = (pu+pv+2*p(i).quv)./8;
+
+%     % rotatory components *dt
+%     p(i).cw   = (pu+pv-2*p(i).quv)./8*dt;
+%     p(i).ccw  = (pu+pv+2*p(i).quv)./8*dt;
     
 %     figure
 %     plot(p(i).cw,'c')
