@@ -1,5 +1,5 @@
-%% function [period,freq,power] = fft_spectra2(t,y,tukey,numwin)
-%  Maarten Buijsman, USM, 2021-5-18
+%% function [period,freq,power] = fft_spectra2(t,y,tukey,numwin,linfit)
+%  Maarten Buijsman, USM, 2024-7-23
 %  performs simple spectral analysis
 %  input
 %     time vector t1 and data y1
@@ -15,11 +15,13 @@
 %  numwin sets the number of 50% overlapping windows 
 %  if numwin = 1, the entire even length of the time series is used
 %  the time series mean is removed
+%  if linfit = 1, the linear fit is removed
+%
 %  In the code Parseval's theoreum is satisfied: 
 %     sum(abs(xi).^2)*dt = sum(abs(Xi).^2)*df 
 %     see https://www.mathworks.com/matlabcentral/answers/15770-scaling-the-fft-and-the-ifft 
 
-function [period,freq,power] = fft_spectra2(t1,y1,tukey,numwin);
+function [period,freq,power] = fft_spectra2(t1,y1,tukey,numwin,linfit);
 
 %% test
 % clear all
@@ -50,10 +52,12 @@ for i=1:numwin
     t = t1(p(i).ii);  
     nt = length(t);
 
-    % % remove linear fit (this is a slow routine ...)
-    % cf    = polyfit(t,y,1);
-    % y_fit = polyval(cf,t);
-    % y = y - y_fit;  
+    % remove linear fit (this is a slow routine ...)
+    if linfit
+        cf    = polyfit(t-mean(t),y,1);
+        y_fit = polyval(cf,t-mean(t));
+        y = y - y_fit;  
+    end
 
     % fast!
     y = y-mean(y);

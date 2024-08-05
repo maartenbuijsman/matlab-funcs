@@ -40,8 +40,9 @@ for jj=1:length(JT)
         
         ini = [is:ie];
         
-        %fname = [fnm num2str(JT(jj)) '_' num2str(IT(ii)) ext]        
-        fname = [fnm sprintf('%02d',JT(jj)) '_' sprintf('%02d',IT(ii)) ext] % allows first digit to be a 0        
+        fname = [fnm sprintf('%02d',JT(jj)) '_' sprintf('%02d',IT(ii)) ext]; % allows first digit to be a 0        
+        
+        %disp([dirin fname])
         
         fid    = fopen([dirin fname],'r',IEEE);
         
