@@ -74,7 +74,7 @@ N2 = Nb.^2;
 if nonhyd
     %% non-hydrostatic part: Nb-omega     
     N2 = Nb.^2-om^2; Isel=find(N2<0); 
-    N2(N2<0) = 1e-12
+    N2(N2<0) = 1e-12;
 else
     %% hydrostatic part
     N2 = Nb.^2;     

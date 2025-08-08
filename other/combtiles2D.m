@@ -1,4 +1,4 @@
-%% function varout = combtiles2D(fnm,ext,dirin,lenrec,IEEE,nx,ny,halo,numl,IT,JT);
+%% function varout = combtiles2D(fnm,ext,dirin,lenrec,format,IEEE,nx,ny,halo,numl,IT,JT);
 %  Maarten Buijsman, USM, 2022-6-15
 %  Function extracts stacked 2D records and combines several tiles
 %  In the case of 1 tile, buffers are also removed
@@ -8,6 +8,7 @@
 %  ext: extension, ext = '.BinF'
 %  dirin: directory
 %  lenrec: record length, lenrec = (nx+2*halo)*(ny+2*halo)+2;  
+%  format: 'single' or 'int32'
 %  IEEE: file format, IEEE = 'ieee-be'
 %  nx,ny,halo,numl: x and y tile dimensions, buffer, number of records
 %  IT,JT: vectors of x and y tile numbers, as in e.g.,  
@@ -18,7 +19,7 @@
 %  Output:
 %  varout: combined variable
 
-function varout = combtiles2D(fnm,ext,dirin,lenrec,IEEE,nx,ny,halo,numl,IT,JT);
+function varout = combtiles2D(fnm,ext,dirin,lenrec,format,IEEE,nx,ny,halo,numl,IT,JT);
 
 % % test
 % lenrec = lenrec2;
@@ -28,7 +29,7 @@ function varout = combtiles2D(fnm,ext,dirin,lenrec,IEEE,nx,ny,halo,numl,IT,JT);
 % IT = 37:38; JT = 22:24;
 % % test
 
-var3 = zeros(length(JT)*ny,length(IT)*nx,numl);
+varout = zeros(length(JT)*ny,length(IT)*nx,numl);
 
 js=1; je=ny;
 for jj=1:length(JT)
@@ -42,7 +43,7 @@ for jj=1:length(JT)
         
         fname = [fnm sprintf('%02d',JT(jj)) '_' sprintf('%02d',IT(ii)) ext]; % allows first digit to be a 0        
         
-        %disp([dirin fname])
+%         disp([dirin fname])
         
         fid    = fopen([dirin fname],'r',IEEE);
         
@@ -50,17 +51,18 @@ for jj=1:length(JT)
                 
         % extract all records
         for i=1:numl
-            alldata = fread(fid,lenrec,'single');
+            alldata = fread(fid,lenrec,format);
             var1 = permute(reshape(alldata(2:end-1),[nx+halo*2 ny+halo*2]),[2 1]);
             varout(inj,ini,i) = var1(halo+1:ny+halo,halo+1:nx+halo);
         end
-        
         fclose(fid);
+        
+        %figure; pcolor(var3(:,:,1)); shading flat; caxis([-0.005 0.005])   
+%         whos varout
+%         je,ie,inj,ini
+%          figure; plot(squeeze(varout(je,ie,:))); title(fname);
+
         is=is+nx; ie=ie+nx;
-        
-        %figure; pcolor(var3(:,:,1)); shading flat; caxis([-0.005 0.005])        
-        %figure; plot(var3(10,:,1))
-        
     end
     
     js=js+ny; 
